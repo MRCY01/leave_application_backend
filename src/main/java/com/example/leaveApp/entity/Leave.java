@@ -27,8 +27,9 @@ public class Leave {
     @JoinColumn(name="application_id")
     private Application application;
 
-
+    @Column(name = "date_apply")
     private Date applyDate;
+    @Column(name = "reason")
     private String reason;
     // private Boolean isFullDay;
 //    private Boolean amPm;

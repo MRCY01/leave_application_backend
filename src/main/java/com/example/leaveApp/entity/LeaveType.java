@@ -24,7 +24,7 @@ public class LeaveType {
 
     @Column(name = "Name")
     private String leaveType;
-    @Column(name = "isActive")
+    @Column(name = "is_active")
     private boolean isActive;
 
 }
