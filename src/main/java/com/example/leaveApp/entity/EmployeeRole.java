@@ -3,9 +3,11 @@ package com.example.leaveApp.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+// @ToString
 @Entity
 @Builder
 @Setter
@@ -23,5 +25,8 @@ public class EmployeeRole {
     @ManyToOne
     @JoinColumn(name="role_id")
     private Role role;
+
+    @Column(name="assigned_date")
+    private String assignedDate;
 
 }

@@ -3,6 +3,7 @@ package com.example.leaveApp.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -19,6 +20,9 @@ public class LeaveBalance {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "balance")
+    private String balance;
+
     @ManyToOne
     @JoinColumn(name="emp_id")
     private Employee employee;
@@ -28,6 +32,15 @@ public class LeaveBalance {
     private LeaveType leaveType;
 
     @OneToMany(mappedBy = "leaveBalance")
-    private List<Leave> empLeave;
+    private List<Leave> leave;
+
+    @Column(name = "date_assigned")
+    private String dateAssigned;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "expiry_date")
+    private String expiryDate;
 
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+// @ToString
 @Entity
 @Builder
 @Setter
@@ -28,3 +28,4 @@ public class Role {
     private String permission;
 
 }
+

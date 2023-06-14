@@ -30,7 +30,8 @@ public class Leave {
 
     private Date applyDate;
     private String reason;
-    private Boolean isFullDay;
+    // private Boolean isFullDay;
+//    private Boolean amPm;
 
 
 }

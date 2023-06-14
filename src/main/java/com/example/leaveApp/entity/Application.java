@@ -28,11 +28,11 @@ public class Application {
     @ManyToOne
     @JoinColumn(name="manager_id")
     private Employee managerId;
-    @ManyToOne
-    @JoinColumn(name="admin_id")
-    private Employee adminId;
+    // @ManyToOne
+    // @JoinColumn(name="admin_id")
+    // private Employee adminId;
     private Boolean managerApprove;
-    private Boolean adminApprove;
-    private Date submitDate;
+    // private Boolean adminApprove;
+    private String submitDate;
     private String status;
 }

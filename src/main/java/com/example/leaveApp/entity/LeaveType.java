@@ -22,7 +22,9 @@ public class LeaveType {
     @OneToMany(mappedBy = "leaveType")
     private List<LeaveBalance> leaveBalance;
 
-    @Column(name = "leave_type")
+    @Column(name = "Name")
     private String leaveType;
+    @Column(name = "isActive")
+    private boolean isActive;
 
 }
