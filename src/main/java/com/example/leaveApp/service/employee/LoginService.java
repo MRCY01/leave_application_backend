@@ -3,6 +3,7 @@ package com.example.leaveApp.service.employee;
 import com.example.leaveApp.entity.Employee;
 //import com.example.leaveApp.entity.Manager;
 //import com.example.leaveApp.jwt.JWTUtil;
+import com.example.leaveApp.exception.ServiceException;
 import com.example.leaveApp.jwt.JWTUtil;
 import com.example.leaveApp.repo.EmployeeRepository;
 import com.example.leaveApp.repo.EmployeeRoleRepository;
@@ -29,31 +30,40 @@ public class LoginService {
     EmployeeRoleRepository employeeRoleRepository;
     @SneakyThrows
     public LoginResponse login(LoginRequest loginRequest) {
-        String loginEmail = loginRequest.getLoginEmail();
-        String password = loginRequest.getPassword();
+        try{
+            LoginResponse response = new LoginResponse();
+            String loginEmail = loginRequest.getLoginEmail();
+            String password = loginRequest.getPassword();
 
-        if(loginEmail.equals("") || loginEmail == null || password.equals("") || password == null) {
-            System.out.println("credential not complete");
+            if(loginEmail.equals("") || loginEmail == null || password.equals("") || password == null) {
+                // System.out.println("credential not complete");
+                throw new ServiceException();
+            }
+
+            Employee employee = employeeRepository.findByEmail(loginEmail);
+            if (employee == null) {
+                throw new ServiceException("email not found");
+            }
+
+            if(!employee.getPassword().equalsIgnoreCase(password)){
+                throw new ServiceException("incorrect password");
+            }
+
+            String token = jwtUtil.generateToken(employee.getId().toString(), employee.getEmail());
+
+
+            String message = "successful, check DB";
+
+            response.setMessage(message);
+            response.setToken(token);
+            return response;
+
+        }catch (ServiceException e){
+            throw e;
         }
-
-        Employee employee = employeeRepository.findByEmail(loginEmail);
-        if (employee == null) {
-            throw new Exception("email not found");
+        catch (Exception e){
+            throw e;
         }
-
-        if(!employee.getPassword().equalsIgnoreCase(password)){
-            throw new Exception("incorrect password");
-        }
-
-        String token = jwtUtil.generateToken(employee.getId().toString(), employee.getEmail());
-
-
-        LoginResponse loginResponse = new LoginResponse();
-        String message = "successful, check DB";
-
-        loginResponse.setMessage(message);
-        loginResponse.setToken(token);
-        return loginResponse;
     }
 
 

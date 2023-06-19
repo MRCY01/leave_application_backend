@@ -22,4 +22,5 @@ public class ShowAllLeaveBalanceResponse {
     // private String leaveType;
     // List<Map<String, String>> leaveBalanceList;
     List<Map<String,Object>> leaveBalanceList;
+    String message;
 }

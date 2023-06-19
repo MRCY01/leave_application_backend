@@ -28,5 +28,6 @@ public class CreateEmployeeRequest {
     private String email;
     private String group;
     private String managerId;
+    private String token;
 
 }

@@ -5,11 +5,13 @@ import com.example.leaveApp.entity.Employee;
 import com.example.leaveApp.entity.EmployeeRole;
 import com.example.leaveApp.entity.ManagerEmployee;
 import com.example.leaveApp.exception.ServiceException;
+import com.example.leaveApp.jwt.JWTUtil;
 import com.example.leaveApp.repo.EmployeeRepository;
 //import com.example.leaveApp.repo.ManagerRepository;
 import com.example.leaveApp.repo.ManagerEmployeeRepository;
 import com.example.leaveApp.reqres.admin.CreateEmployeeRequest;
 import com.example.leaveApp.reqres.admin.CreateEmployeeResponse;
+import com.example.leaveApp.service.AuthService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,22 +27,26 @@ public class CreateEmployeeService {
     EmployeeRepository employeeRepository;
     @Autowired
     ManagerEmployeeRepository managerEmployeeRepository;
-//    @Autowired
-//    ManagerRepository managerRepository;
+    @Autowired
+    AuthService authService;
+    @Autowired
+    JWTUtil jwtUtil;
     @SneakyThrows
     public CreateEmployeeResponse addEmployee(CreateEmployeeRequest createEmployeeRequest) throws ServiceException {
-
         CreateEmployeeResponse createEmployeeResponse = new CreateEmployeeResponse();
+
+        String token = createEmployeeRequest.getToken();
+        List<String> roleList = authService.getUserRole(token);
+        jwtUtil.validateToken(token, jwtUtil.extractUserId(token));
+
+        if(!roleList.contains("ADMIN")){
+            createEmployeeResponse.setMessage("you are not admin");
+            throw new ServiceException("you are not admin");
+        }
+
         try{
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             Employee employee = new Employee();
-                        //encode password
-//            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//            String saltString = BCrypt.gensalt();
-//            String combinedPassword = passwordEncoder.encode(loginPassword+saltString);
-//            System.out.println("LoginPassword "+loginPassword+" hash password "+combinedPassword);
-//            employee.setPassword(combinedPassword);
-//            employee.setSalt(saltString);
             employee.setEmpName(createEmployeeRequest.getEmpName());
             employee.setPassword(createEmployeeRequest.getPassword());
             employee.setEmail(createEmployeeRequest.getEmail());
@@ -54,7 +60,6 @@ public class CreateEmployeeService {
             employee.setActive(false);
 
             if(employeeRepository.existsByEmail(createEmployeeRequest.getEmail())){
-                createEmployeeResponse.setMessage("user already exist");
                 throw new ServiceException("user already exist");
             }
 

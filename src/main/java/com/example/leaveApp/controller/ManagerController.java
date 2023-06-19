@@ -38,7 +38,6 @@ public class ManagerController {
         ServiceErrorResponse response = new ServiceErrorResponse();
         response.setMessage(ex.getMessage());
         response.setStatusCode("404");
-        response.setInfo("error");
         return response;
     }
 
@@ -48,7 +47,6 @@ public class ManagerController {
         ServiceErrorResponse response = new ServiceErrorResponse();
         response.setMessage(ex.getMessage());
         response.setStatusCode("404");
-        response.setInfo("error");
         return response;
     }
 }

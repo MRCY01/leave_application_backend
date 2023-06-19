@@ -58,7 +58,7 @@ public class ApproveLeaveService {
                 int cal = Integer.parseInt(leaveBalance.getBalance()) - 1;
                 leaveBalance.setBalance(String.valueOf(cal));
             }else{
-                String type = leaveBalance.getLeaveType().getLeaveType();
+                String type = leaveBalance.getLeaveType().getLeaveTypeName();
                 throw new Exception(type+" no leave left");
             }
             leaveBalanceRepository.save(leaveBalance);

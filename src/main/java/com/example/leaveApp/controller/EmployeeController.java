@@ -1,5 +1,6 @@
 package com.example.leaveApp.controller;
 
+import com.example.leaveApp.exception.ServiceException;
 import com.example.leaveApp.reqres.employee.employeeShowAll.ShowLeaveHistoryRequest;
 import com.example.leaveApp.reqres.employee.employeeShowAll.ShowLeaveHistoryResponse;
 import com.example.leaveApp.reqres.employee.login.LoginResponse;
@@ -27,7 +28,7 @@ public class EmployeeController {
     EmployeeShowAllService employeeShowAllService;
 
     @PostMapping(path = "/employee/login")
-    public LoginResponse login(@RequestBody LoginRequest loginRequest){
+    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest){
         return loginService.login(loginRequest);
     }
 
@@ -43,6 +44,15 @@ public class EmployeeController {
         return employeeShowAllService.showLeaveHistory(showLeaveHistoryRequest);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ServiceException.class)
+    public ServiceErrorResponse handleServiceException(ServiceException e) {
+        e.printStackTrace();
+        ServiceErrorResponse response = new ServiceErrorResponse();
+        response.setMessage(e.getMessage());
+        response.setStatusCode("400");
+        return response;
+    }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EntityNotFoundException.class)
@@ -50,7 +60,6 @@ public class EmployeeController {
         ServiceErrorResponse response = new ServiceErrorResponse();
         response.setMessage(ex.getMessage());
         response.setStatusCode("404");
-        response.setInfo("error");
         return response;
     }
 }

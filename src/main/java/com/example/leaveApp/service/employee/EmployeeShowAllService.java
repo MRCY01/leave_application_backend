@@ -46,7 +46,7 @@ public class EmployeeShowAllService {
                 leaveDetails.setApplyDate(l.getApplyDate().toString());
                 leaveDetails.setLeaveBalanceId(l.getLeaveBalance().getId().toString());
                 leaveDetails.setLeaveId(l.getId().toString());
-                leaveDetails.setLeaveTypeName(l.getLeaveBalance().getLeaveType().getLeaveType());
+                leaveDetails.setLeaveTypeName(l.getLeaveBalance().getLeaveType().getLeaveTypeName());
                 leaveDetailsList.add(leaveDetails);
             }
             applicationDetailsList.add(applicationDetails);

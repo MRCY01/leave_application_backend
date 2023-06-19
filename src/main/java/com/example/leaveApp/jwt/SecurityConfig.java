@@ -16,7 +16,7 @@
 // @RequiredArgsConstructor
 // @EnableMethodSecurity
 // public class SecurityConfig {
-//    // private final JWTAuthFilter jwtAuthFilter;
+//    private final JWTAuthFilter jwtAuthFilter;
 //     private AuthenticationProvider authenticationProvider;
 //
 //     @Bean
@@ -24,7 +24,7 @@
 //        http
 //                .csrf().disable()
 //                .authorizeHttpRequests()
-//                .requestMatchers("")
+//                .requestMatchers("api/auth/**")
 //                .permitAll()
 //                .anyRequest()
 //                .authenticated()

@@ -1,10 +1,10 @@
 package com.example.leaveApp.reqres.admin;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ShowAllLeaveBalanceRequest {
+    String token;
 }

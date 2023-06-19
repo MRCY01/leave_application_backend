@@ -12,6 +12,7 @@
 // import org.springframework.security.core.context.SecurityContextHolder;
 // import org.springframework.security.core.userdetails.UserDetails;
 // import org.springframework.security.core.userdetails.UserDetailsService;
+// import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 // import org.springframework.stereotype.Component;
 // import org.springframework.web.filter.OncePerRequestFilter;
 //
@@ -26,6 +27,7 @@
 //    @Autowired
 //    private final UserDetailsService userDetailsService;
 //
+//    private JWTService jwtService;
 //    @Override
 //    protected void doFilterInternal(
 //            @NonNull HttpServletRequest request,
@@ -35,7 +37,7 @@
 //
 //        final String header = request.getHeader("Authorization");
 //        final String token;
-//        final String userId;
+//        final String userEmail;
 //        //checking Jwt token
 //        if(header==null || !header.startsWith("Bearer ")){
 //            filterChain.doFilter(request,response);
@@ -44,14 +46,24 @@
 //        //extract token if true
 //        token = header.substring(7);
 //
-//        userId = jwtUtil.extractUserId(token);
-//        String userEmail = jwtUtil.extractUserEmail(token);
+//        userEmail = jwtService.extractUserName(token);
 //
 //        if(userEmail!=null&& SecurityContextHolder.getContext().getAuthentication() ==null){
-//            UserDetails userDetails =
+//            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+//            if(jwtService.isTokenValid(token,userDetails)){
+//                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+//                         userDetails,
+//                         null,
+//                         userDetails.getAuthorities()
+//                 );
+//                 authToken.setDetails( new WebAuthenticationDetailsSource().buildDetails(request));
+//                 SecurityContextHolder.getContext().setAuthentication(authToken);
+//            }
+//            filterChain.doFilter(request,response);
 //        }
-// //        String token = extractToken(request);
-// //        try{
+//
+//                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 //        String token = extractToken(request);
+//                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 //        try{
 // //            if(token!=null && validateToken(token)){
 // //                // If the token is valid, set the user in the Spring Security context
 // //                Claims claims = JWTUtil.parseToken(token);

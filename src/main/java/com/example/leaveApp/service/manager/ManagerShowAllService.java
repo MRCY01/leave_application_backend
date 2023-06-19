@@ -50,7 +50,7 @@ public class ManagerShowAllService {
                     leaveDetails.setApplyDate(l.getApplyDate().toString());
                     leaveDetails.setLeaveBalanceId(l.getLeaveBalance().getId().toString());
                     leaveDetails.setLeaveId(l.getId().toString());
-                    leaveDetails.setLeaveTypeName(l.getLeaveBalance().getLeaveType().getLeaveType());
+                    leaveDetails.setLeaveTypeName(l.getLeaveBalance().getLeaveType().getLeaveTypeName());
                     leaveDetailsList.add(leaveDetails);
                 }
                 applicationDetails.setLeaveDetailsList(leaveDetailsList);

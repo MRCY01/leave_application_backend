@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,13 +36,18 @@ public class AdminController {
 
     @PostMapping(path = "/admin/createNewUser")
     @SneakyThrows
-    public CreateEmployeeResponse newUser(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest, HttpServletRequest httpServletRequest)  {
+    public CreateEmployeeResponse newUser(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest,
+                                          @RequestHeader("Authorization") String header)  {
 
+        // HttpHeaders headers = new HttpHeaders();
+        // headers.add("Custom-Header", "Header Value");
         return createEmployeeService.addEmployee(createEmployeeRequest);
     }
 
     @PostMapping(path = "/admin/showAllUser")
-    public ShowAllEmployeeResponse showAllEmp(@Valid@RequestBody ShowAllEmployeeRequest showAllEmployeeRequest) {
+    public ShowAllEmployeeResponse showAllEmp(@Valid@RequestBody ShowAllEmployeeRequest showAllEmployeeRequest,@RequestHeader("Authorization") String authorizationHeader) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Custom-Header", "Header Value");
         return adminShowAllService.showAllEmployee(showAllEmployeeRequest);
     }
 
@@ -81,7 +87,6 @@ public class AdminController {
         ServiceErrorResponse response = new ServiceErrorResponse();
         response.setMessage(e.getMessage());
         response.setStatusCode("400");
-        response.setInfo("From Admin API");
         return response;
     }
 
@@ -99,7 +104,6 @@ public class AdminController {
         ServiceErrorResponse response = new ServiceErrorResponse();
         response.setMessage("Error had been occur");
         response.setStatusCode("400");
-        response.setInfo(errors);
         return response;
     }
 }

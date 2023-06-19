@@ -12,5 +12,4 @@ import lombok.Setter;
 public class ServiceErrorResponse {
     private String message;
     private String statusCode;
-    private Object info;
 }

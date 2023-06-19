@@ -61,8 +61,12 @@ public class Employee {
     private String phoneNo;
     @Column(name="grouped", nullable = false)
     private String grouped;
+
+    @Column(name = "employment_status")
+    private String employmentStatus;
     @Column(name="firstTimeLogin")
     private boolean isFirstTimeLogin;
+
     // @ManyToOne
     // @JoinColumn(name="manager_id")
     // private ManagerEmployee manager;

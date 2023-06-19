@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LeaveTypeRepository extends JpaRepository<LeaveType, Long> {
 
-    LeaveType getReferenceByLeaveType(String leaveType);
+    // LeaveType getReferenceByLeaveType(String leaveType);
 }

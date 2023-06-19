@@ -23,7 +23,7 @@ public class LeaveType {
     private List<LeaveBalance> leaveBalance;
 
     @Column(name = "Name")
-    private String leaveType;
+    private String leaveTypeName;
     @Column(name = "is_active")
     private boolean isActive;
 
