@@ -6,15 +6,15 @@ import com.example.leaveApp.jwt.JWTUtil;
 import com.example.leaveApp.reqres.ServiceErrorResponse;
 import com.example.leaveApp.reqres.admin.*;
 import com.example.leaveApp.service.AuthService;
-import com.example.leaveApp.service.admin.ResetPasswordService;
-import com.example.leaveApp.service.admin.AdminShowAllService;
-import com.example.leaveApp.service.admin.UpdateStatusService;
-import com.example.leaveApp.service.admin.CreateEmployeeService;
-import com.example.leaveApp.service.admin.UpdateLeaveBalanceService;
+import com.example.leaveApp.service.admin.create.CreateLeaveService;
+import com.example.leaveApp.service.admin.update.ResetPasswordService;
+import com.example.leaveApp.service.admin.view.AdminViewService;
+import com.example.leaveApp.service.admin.update.UpdateStatusService;
+import com.example.leaveApp.service.admin.create.CreateEmployeeService;
+import com.example.leaveApp.service.admin.update.UpdateLeaveBalanceService;
 import jakarta.validation.Valid;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,15 +32,17 @@ public class AdminController {
     @Autowired
     UpdateLeaveBalanceService updateLeaveBalanceService;
     @Autowired
-    AdminShowAllService       adminShowAllService;
+    AdminViewService          adminViewService;
     @Autowired
-    ResetPasswordService    resetPasswordService;
+    ResetPasswordService      resetPasswordService;
+    @Autowired
+    CreateLeaveService createLeaveService;
     @Autowired
     AuthService authService;
     @Autowired
     JWTUtil jwtUtil;
 
-    @PostMapping(path = "/admin/createNewUser")
+    @PostMapping(path = "/admin/user/new/create")
     @SneakyThrows
     public CreateEmployeeResponse newUser(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest,
                                           @RequestHeader("Authorization") String header)  {
@@ -53,7 +55,7 @@ public class AdminController {
         return createEmployeeService.addEmployee(createEmployeeRequest);
     }
 
-    @PostMapping(path = "/admin/showAllUser")
+    @PostMapping(path = "/admin/user/all/show")
     public ShowAllEmployeeResponse showAllEmp(@Valid@RequestBody ShowAllEmployeeRequest showAllEmployeeRequest,
                                               @RequestHeader("Authorization") String authorizationHeader) {
         // HttpHeaders headers = new HttpHeaders();
@@ -61,10 +63,10 @@ public class AdminController {
         String token = showAllEmployeeRequest.getToken();
         Employee user = authService.getUser(token);
         showAllEmployeeRequest.setUser(user);
-        return adminShowAllService.showAllEmployee(showAllEmployeeRequest);
+        return adminViewService.showAllEmployee(showAllEmployeeRequest);
     }
 
-    @PostMapping(path = "/admin/assignRole")
+    @PostMapping(path = "/admin/role/assign")
     public AssignRoleResponse assignRole(@Valid @RequestBody AssignRoleRequest assignRoleRequest) {
         String token = assignRoleRequest.getToken();
         Employee user = authService.getUser(token);
@@ -72,7 +74,7 @@ public class AdminController {
         return updateStatusService.assignRole(assignRoleRequest);
     }
 
-    @PostMapping(path = "/admin/updateHiredStatus")
+    @PostMapping(path = "/admin/hiredStatus/update")
     public ApproveEmployeeResponse updateStatus(@Valid @RequestBody ApproveEmployeeRequest approveEmployeeRequest) {
         String token = approveEmployeeRequest.getToken();
         Employee user = authService.getUser(token);
@@ -80,15 +82,15 @@ public class AdminController {
         return updateStatusService.updateHiredStatus(approveEmployeeRequest);
     }
 
-    @PostMapping(path = "/admin/assignLeaveBalance")
+    @PostMapping(path = "/admin/leave/create")
     public AssignTotalLeaveResponse updateLeave(@Valid @RequestBody AssignTotalLeaveRequest assignTotalLeaveRequest) {
         String token = assignTotalLeaveRequest.getToken();
         Employee user = authService.getUser(token);
         assignTotalLeaveRequest.setUser(user);
-        return updateLeaveBalanceService.createLeave(assignTotalLeaveRequest);
+        return createLeaveService.createLeave(assignTotalLeaveRequest);
     }
 
-    @PostMapping(path = "/admin/updateLeaveBalance")
+    @PostMapping(path = "/admin/leaveBalance/update")
     public UpdateLeaveBalanceResponse updateLeaveBalance(@Valid @RequestBody UpdateLeaveBalanceRequest updateLeaveBalanceRequest) {
         String token = updateLeaveBalanceRequest.getToken();
         Employee user = authService.getUser(token);
@@ -96,14 +98,14 @@ public class AdminController {
         return updateLeaveBalanceService.updateLeaveBalance(updateLeaveBalanceRequest);
     }
 
-    @PostMapping(path="/admin/showAllLeaveBalance")
+    @PostMapping(path="/admin/leaveBalance/all/show")
     public ShowAllLeaveBalanceResponse showAllLeaveBalance(@Valid @RequestBody ShowAllLeaveBalanceRequest showAllLeaveBalanceRequest){
         String token = showAllLeaveBalanceRequest.getToken();
         Employee user = authService.getUser(token);
         showAllLeaveBalanceRequest.setUser(user);
-        return adminShowAllService.showAllLeaveBalance(showAllLeaveBalanceRequest);
+        return adminViewService.showAllLeaveBalance(showAllLeaveBalanceRequest);
     }
-    @PostMapping(path = "/admin/resetPassword")
+    @PostMapping(path = "/admin/Password/reset")
     public ResetPasswordResponse resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest){
         String token = resetPasswordRequest.getToken();
         Employee user = authService.getUser(token);

@@ -1,4 +1,4 @@
-package com.example.leaveApp.service.admin;
+package com.example.leaveApp.service.admin.view;
 
 import com.example.leaveApp.entity.Employee;
 import com.example.leaveApp.exception.ServiceException;
@@ -13,16 +13,12 @@ import com.example.leaveApp.service.AuthService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 
-import java.net.http.HttpHeaders;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class AdminShowAllService {
+public class AdminViewService {
     @Autowired
     EmployeeRepository employeeRepository;
     @Autowired

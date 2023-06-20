@@ -1,4 +1,4 @@
-package com.example.leaveApp.service.admin;
+package com.example.leaveApp.service.admin.update;
 
 import com.example.leaveApp.entity.Employee;
 import com.example.leaveApp.exception.ServiceException;
