@@ -1,5 +1,6 @@
 package com.example.leaveApp.reqres.admin;
 
+import com.example.leaveApp.entity.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +15,6 @@ import java.util.List;
 public class AssignTotalLeaveRequest {
     private Long empId;
     private List<LeaveBalanceItem> LeaveBalanceList;
+    private String token;
+    private Employee user;
 }

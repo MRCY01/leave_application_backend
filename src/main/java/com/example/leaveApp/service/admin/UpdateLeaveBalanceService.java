@@ -3,6 +3,7 @@ package com.example.leaveApp.service.admin;
 import com.example.leaveApp.entity.Employee;
 import com.example.leaveApp.entity.LeaveBalance;
 import com.example.leaveApp.entity.LeaveType;
+import com.example.leaveApp.exception.ServiceException;
 import com.example.leaveApp.repo.EmployeeRepository;
 import com.example.leaveApp.repo.LeaveBalanceRepository;
 import com.example.leaveApp.repo.LeaveTypeRepository;
@@ -10,6 +11,7 @@ import com.example.leaveApp.reqres.admin.UpdateLeaveBalanceRequest;
 import com.example.leaveApp.reqres.admin.AssignTotalLeaveRequest;
 import com.example.leaveApp.reqres.admin.AssignTotalLeaveResponse;
 import com.example.leaveApp.reqres.admin.UpdateLeaveBalanceResponse;
+import com.example.leaveApp.service.AuthService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +29,19 @@ public class UpdateLeaveBalanceService {
     LeaveTypeRepository    leaveTypeRepository;
     @Autowired
     LeaveBalanceRepository leaveBalanceRepository;
+    @Autowired
+    AuthService authService;
 
     @SneakyThrows
     public AssignTotalLeaveResponse createLeave(AssignTotalLeaveRequest assignTotalLeaveRequest) {
 
-        AssignTotalLeaveResponse assignTotalLeaveResponse = new AssignTotalLeaveResponse();
 
+        AssignTotalLeaveResponse assignTotalLeaveResponse = new AssignTotalLeaveResponse();
         try {
+            Employee user = assignTotalLeaveRequest.getUser();
+            if(!authService.hasRole(user,"ADMIN")){
+                throw new ServiceException("user is not admin");
+            }
             Employee employee = employeeRepository.findById(assignTotalLeaveRequest.getEmpId())
                     .orElseThrow(() -> new EntityNotFoundException());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -69,21 +77,29 @@ public class UpdateLeaveBalanceService {
 
     @SneakyThrows
     public UpdateLeaveBalanceResponse updateLeaveBalance(UpdateLeaveBalanceRequest updateLeaveBalanceRequest) {
+        try{
+            Employee user = updateLeaveBalanceRequest.getUser();
+            if(!authService.hasRole(user,"ADMIN")){
+                throw new ServiceException("user is not admin");
+            }
 
-        UpdateLeaveBalanceResponse response = new UpdateLeaveBalanceResponse();
-        Long leaveBalanceId = updateLeaveBalanceRequest.getLeaveBalanceId();
-        String balance     = updateLeaveBalanceRequest.getBalance();
-        String dateExpired = updateLeaveBalanceRequest.getDateExpired();
+            UpdateLeaveBalanceResponse response = new UpdateLeaveBalanceResponse();
+            Long leaveBalanceId = updateLeaveBalanceRequest.getLeaveBalanceId();
+            String balance     = updateLeaveBalanceRequest.getBalance();
+            String dateExpired = updateLeaveBalanceRequest.getDateExpired();
 
-        LeaveBalance leaveBalance = leaveBalanceRepository.findById(leaveBalanceId)
-                .orElseThrow(() -> new EntityNotFoundException());
-        leaveBalance.setBalance(balance);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        leaveBalance.setExpiryDate(String.format(dateExpired, formatter));
+            LeaveBalance leaveBalance = leaveBalanceRepository.findById(leaveBalanceId)
+                    .orElseThrow(() -> new EntityNotFoundException());
+            leaveBalance.setBalance(balance);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            leaveBalance.setExpiryDate(String.format(dateExpired, formatter));
 
-        leaveBalanceRepository.save(leaveBalance);
+            leaveBalanceRepository.save(leaveBalance);
 
-        response.setMessage("update successfully");
-        return response;
+            response.setMessage("update successfully");
+            return response;
+        }catch (ServiceException e){
+            throw e;
+        }
     }
 }

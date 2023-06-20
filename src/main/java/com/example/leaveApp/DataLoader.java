@@ -55,12 +55,13 @@ public class DataLoader implements ApplicationRunner {
                 adminDetails.setEmail("admin@gmail.com");
                 adminDetails.setBod("1990-5-6");
                 adminDetails.setPassword("Pass");
-                adminDetails.setEmpName("fatimah");
+                adminDetails.setEmpName("admin");
                 adminDetails.setAddress("134, jln 33");
                 adminDetails.setGrouped("IT");
-                adminDetails.setMaritalStatus("yes");
+                adminDetails.setMaritalStatus("married");
                 adminDetails.setPhoneNo("0105613876");
                 adminDetails.setEmploymentStatus("admin account");
+                adminDetails.setCreatedDate(LocalDateTime.now().format(formatter));
 
                 EmployeeRole tmp = new EmployeeRole();
                 tmp.setEmployee(adminDetails);

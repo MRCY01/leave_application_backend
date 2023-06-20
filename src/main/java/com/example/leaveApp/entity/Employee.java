@@ -3,6 +3,7 @@ package com.example.leaveApp.entity;
 import com.example.leaveApp.repo.EmployeeRoleRepository;
 import com.example.leaveApp.repo.RoleRepository;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.GrantedAuthority;
@@ -45,6 +46,7 @@ public class Employee {
     @Column(name = "approved_date")
     private String approvedDate;
 
+    @NotBlank
     @Column(name= "password", nullable = false)
     private String password;
     @Column(name= "salt")
@@ -55,6 +57,7 @@ public class Employee {
     private String address;
     @Column(name = "marital_status", nullable = false)
     private String maritalStatus;
+    @NotBlank
     @Column(name = "email", nullable = false)
     private String email;
     @Column(name = "phone_no", nullable = false)

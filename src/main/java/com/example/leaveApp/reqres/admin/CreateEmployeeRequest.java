@@ -1,5 +1,6 @@
 package com.example.leaveApp.reqres.admin;
 
+import com.example.leaveApp.entity.Employee;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -28,6 +29,7 @@ public class CreateEmployeeRequest {
     private String email;
     private String group;
     private String managerId;
-    private String token;
+    private String   token;
+    private Employee user;
 
 }

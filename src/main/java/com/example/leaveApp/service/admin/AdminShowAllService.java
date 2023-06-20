@@ -1,5 +1,6 @@
 package com.example.leaveApp.service.admin;
 
+import com.example.leaveApp.entity.Employee;
 import com.example.leaveApp.exception.ServiceException;
 import com.example.leaveApp.jwt.JWTUtil;
 import com.example.leaveApp.repo.EmployeeRepository;
@@ -34,34 +35,43 @@ public class AdminShowAllService {
     public ShowAllEmployeeResponse showAllEmployee(ShowAllEmployeeRequest showAllEmployeeRequest){
         ShowAllEmployeeResponse showAllEmployeeResponse = new ShowAllEmployeeResponse();
 
-        String token = showAllEmployeeRequest.getToken();
-        List<String> roleList = authService.getUserRole(token);
-        jwtUtil.validateToken(token, jwtUtil.extractUserId(token));
+        try{
+            Employee user = showAllEmployeeRequest.getUser();
+            if(!authService.hasRole(user,"ADMIN")){
+                throw new ServiceException("user is not admin");
+            }
 
-        if(!roleList.contains("admin")){
-            showAllEmployeeResponse.setMessage("you are not admin");
-            throw new ServiceException("you are not admin");
+            String token = showAllEmployeeRequest.getToken();
+            List<String> roleList = authService.getUserRole(token);
+            jwtUtil.validateToken(token, jwtUtil.extractUserId(token));
+
+            List<Map<String, Object>> employeeList = employeeRepository.getEmployeeData();
+            showAllEmployeeResponse.setEmployeeList(employeeList);
+            showAllEmployeeResponse.setMessage("successfully show");
+        }catch (ServiceException e){
+            throw e;
         }
-        List<Map<String, Object>> employeeList = employeeRepository.getEmployeeData();
-        showAllEmployeeResponse.setEmployeeList(employeeList);
-        showAllEmployeeResponse.setMessage("successfully show");
         return showAllEmployeeResponse;
     }
 
     @SneakyThrows
     public ShowAllLeaveBalanceResponse showAllLeaveBalance(ShowAllLeaveBalanceRequest showAllLeaveBalanceRequest){
         ShowAllLeaveBalanceResponse showAllLeaveBalanceResponse =  new ShowAllLeaveBalanceResponse();
-        String token = showAllLeaveBalanceRequest.getToken();
-        List<String> roleList = authService.getUserRole(token);
-        jwtUtil.validateToken(token, jwtUtil.extractUserId(token));
 
-        if(!roleList.contains("admin")){
-            showAllLeaveBalanceResponse.setMessage("you are not admin");
-            throw new ServiceException("you are not admin");
+        try{
+            Employee user = showAllLeaveBalanceRequest.getUser();
+            if(!authService.hasRole(user,"ADMIN")){
+                throw new ServiceException("user is not admin");
+            }
+            if(leaveBalanceRepository.findAll().isEmpty()){
+                throw  new ServiceException("no leave balance record found");
+            }
+            List<Map<String,Object>>leaveBalanceList= leaveBalanceRepository.findLeaveBalanceData();
+            showAllLeaveBalanceResponse.setLeaveBalanceList(leaveBalanceList);
+
+        }catch(ServiceException e){
+            throw e;
         }
-
-        List<Map<String,Object>>leaveBalanceList= leaveBalanceRepository.findLeaveBalanceData();
-        showAllLeaveBalanceResponse.setLeaveBalanceList(leaveBalanceList);
         return showAllLeaveBalanceResponse;
     }
 

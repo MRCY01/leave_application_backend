@@ -6,13 +6,10 @@ import com.example.leaveApp.entity.Employee;
 import com.example.leaveApp.exception.ServiceException;
 import com.example.leaveApp.jwt.JWTUtil;
 import com.example.leaveApp.repo.EmployeeRepository;
-import com.example.leaveApp.repo.EmployeeRoleRepository;
 //import com.example.leaveApp.repo.ManagerRepository;
-import com.example.leaveApp.repo.RoleRepository;
 import com.example.leaveApp.reqres.employee.login.LoginResponse;
 import com.example.leaveApp.reqres.employee.login.LoginRequest;
 import lombok.SneakyThrows;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 // import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,10 +21,7 @@ public class LoginService {
     JWTUtil jwtUtil;
     @Autowired
     EmployeeRepository employeeRepository;
-    @Autowired
-    RoleRepository roleRepository;
-    @Autowired
-    EmployeeRoleRepository employeeRoleRepository;
+
     @SneakyThrows
     public LoginResponse login(LoginRequest loginRequest) {
         try{
@@ -37,7 +31,7 @@ public class LoginService {
 
             if(loginEmail.equals("") || loginEmail == null || password.equals("") || password == null) {
                 // System.out.println("credential not complete");
-                throw new ServiceException();
+                throw new ServiceException("credential not complete");
             }
 
             Employee employee = employeeRepository.findByEmail(loginEmail);

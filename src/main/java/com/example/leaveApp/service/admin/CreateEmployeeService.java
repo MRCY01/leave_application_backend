@@ -2,10 +2,8 @@ package com.example.leaveApp.service.admin;
 
 import com.example.leaveApp.entity.Employee;
 //import com.example.leaveApp.entity.Manager;
-import com.example.leaveApp.entity.EmployeeRole;
 import com.example.leaveApp.entity.ManagerEmployee;
 import com.example.leaveApp.exception.ServiceException;
-import com.example.leaveApp.jwt.JWTUtil;
 import com.example.leaveApp.repo.EmployeeRepository;
 //import com.example.leaveApp.repo.ManagerRepository;
 import com.example.leaveApp.repo.ManagerEmployeeRepository;
@@ -16,10 +14,8 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Service
 public class CreateEmployeeService {
@@ -29,22 +25,17 @@ public class CreateEmployeeService {
     ManagerEmployeeRepository managerEmployeeRepository;
     @Autowired
     AuthService authService;
-    @Autowired
-    JWTUtil jwtUtil;
+
     @SneakyThrows
     public CreateEmployeeResponse addEmployee(CreateEmployeeRequest createEmployeeRequest) throws ServiceException {
         CreateEmployeeResponse createEmployeeResponse = new CreateEmployeeResponse();
 
-        String token = createEmployeeRequest.getToken();
-        List<String> roleList = authService.getUserRole(token);
-        jwtUtil.validateToken(token, jwtUtil.extractUserId(token));
-
-        if(!roleList.contains("ADMIN")){
-            createEmployeeResponse.setMessage("you are not admin");
-            throw new ServiceException("you are not admin");
-        }
-
         try{
+            Employee user = createEmployeeRequest.getUser();
+            if(!authService.hasRole(user,"ADMIN")){
+                throw new ServiceException("user is not admin");
+            }
+
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             Employee employee = new Employee();
             employee.setEmpName(createEmployeeRequest.getEmpName());
