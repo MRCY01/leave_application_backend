@@ -1,0 +1,8 @@
+INSERT INTO testing.role VALUES('1','','employee');
+INSERT INTO testing.role VALUES('2','','manager');
+INSERT INTO testing.role VALUES('3','','admin');
+
+INSERT INTO testing.leave_type  VALUES('1',true,'Annual Leave');
+INSERT INTO testing.leave_type  VALUES('2',true,'Medical Leave');
+INSERT INTO testing.leave_type  VALUES('3',true,'Birthday Leave');
+INSERT INTO testing.leave_type  VALUES('4',true,'Replacement Leave');
