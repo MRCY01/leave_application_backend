@@ -42,7 +42,7 @@ public class AdminController {
     @Autowired
     JWTUtil jwtUtil;
 
-    @PostMapping(path = "/admin/user/new/create")
+    @PostMapping(path = "/admin/user/create")
     @SneakyThrows
     public CreateEmployeeResponse newUser(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest,
                                           @RequestHeader("Authorization") String header)  {
@@ -52,10 +52,10 @@ public class AdminController {
         String token = createEmployeeRequest.getToken();
         Employee user = authService.getUser(token);
         createEmployeeRequest.setUser(user);
-        return createEmployeeService.addEmployee(createEmployeeRequest);
+        return createEmployeeService.createEmployee(createEmployeeRequest);
     }
 
-    @PostMapping(path = "/admin/user/all/show")
+    @PostMapping(path = "/admin/user/showAll")
     public ShowAllEmployeeResponse showAllEmp(@Valid@RequestBody ShowAllEmployeeRequest showAllEmployeeRequest,
                                               @RequestHeader("Authorization") String authorizationHeader) {
         // HttpHeaders headers = new HttpHeaders();

@@ -7,12 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class CreateEmployeeResponse {
-    private String message;
-    private Long empId;
-    // 200/400
-//    private Long managerId;
-//    private String managerName;
+@NoArgsConstructor
+public class AdminShowLeaveBalanceDTO {
+    private String employeeId;
+    private String employeeName;
+    private LeaveBalanceDetails leaveBalanceDetails;
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
 
 @Service
 public class CreateEmployeeService {
@@ -26,39 +27,44 @@ public class CreateEmployeeService {
     @Autowired
     AuthService authService;
 
+    private static final String  EMAIL_PATTERN = "^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+$";
+    private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
     @SneakyThrows
-    public CreateEmployeeResponse addEmployee(CreateEmployeeRequest createEmployeeRequest) throws ServiceException {
+    public CreateEmployeeResponse createEmployee(CreateEmployeeRequest request) throws ServiceException {
         CreateEmployeeResponse createEmployeeResponse = new CreateEmployeeResponse();
 
         try{
-            Employee user = createEmployeeRequest.getUser();
+            Employee user = request.getUser();
             if(!authService.hasRole(user,"ADMIN")){
                 throw new ServiceException("user is not admin");
+            }
+            String email = request.getEmail();
+            if(!pattern.matcher(email).matches()){
+                throw new ServiceException("wrong email format");
+            }
+            if(employeeRepository.existsByEmail(email)){
+                throw new ServiceException("user already exist");
             }
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             Employee employee = new Employee();
-            employee.setEmpName(createEmployeeRequest.getEmpName());
-            employee.setPassword(createEmployeeRequest.getPassword());
-            employee.setEmail(createEmployeeRequest.getEmail());
-            employee.setBod(createEmployeeRequest.getBod());
-            employee.setMaritalStatus(createEmployeeRequest.getMaritalStatus());
-            employee.setPhoneNo(createEmployeeRequest.getPhoneNo());
-            employee.setAddress(createEmployeeRequest.getAddress());
+            employee.setEmpName(request.getEmpName());
+            employee.setPassword(request.getPassword());
+            employee.setEmail(request.getEmail());
+            employee.setBod(request.getBod());
+            employee.setMaritalStatus(request.getMaritalStatus());
+            employee.setPhoneNo(request.getPhoneNo());
+            employee.setAddress(request.getAddress());
             employee.setCreatedDate(LocalDateTime.now().format(formatter).toString());
-            employee.setGrouped(createEmployeeRequest.getGroup());
+            employee.setGrouped(request.getGroup());
             employee.setFirstTimeLogin(true);
             employee.setActive(false);
-
-            if(employeeRepository.existsByEmail(createEmployeeRequest.getEmail())){
-                throw new ServiceException("user already exist");
-            }
 
             employeeRepository.save(employee);
 
             ManagerEmployee managerEmployee = new ManagerEmployee();
             Employee manager = new Employee();
-            String managerId = createEmployeeRequest.getManagerId();
+            String managerId = request.getManagerId();
 
             // if(!managerEmployeeRepository.existsById(1L)){
             //     managerEmployee.setId(1L);
@@ -70,13 +76,10 @@ public class CreateEmployeeService {
             manager.setId(Long.parseLong(managerId));
             managerEmployee.setManager(manager);
             managerEmployee.setEmployee(employee);
-
             managerEmployeeRepository.save(managerEmployee);
 
             createEmployeeResponse.setMessage("successful insert");
-            createEmployeeResponse.setStatus("");
             createEmployeeResponse.setEmpId(employee.getId());
-
 
         } catch (ServiceException e){
             System.out.println(e);

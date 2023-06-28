@@ -14,6 +14,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShowAllEmployeeResponse {
-    public List<Map<String, Object>> employeeList;
+    public List<AdminShowAllDTO> employeeList;
     private String message;
 }

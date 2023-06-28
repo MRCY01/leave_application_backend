@@ -48,6 +48,7 @@ public class EmployeeShowAllService {
                 leaveDetails.setLeaveId(l.getId().toString());
                 leaveDetails.setLeaveTypeName(l.getLeaveBalance().getLeaveType().getLeaveTypeName());
                 leaveDetailsList.add(leaveDetails);
+
             }
             applicationDetailsList.add(applicationDetails);
             applicationDetails.setLeaveDetailsList(leaveDetailsList);
