@@ -5,9 +5,12 @@ import com.example.leaveApp.exception.ServiceException;
 import com.example.leaveApp.jwt.JWTUtil;
 import com.example.leaveApp.reqres.ServiceErrorResponse;
 import com.example.leaveApp.reqres.admin.*;
+import com.example.leaveApp.reqres.admin.update.NewLeaveTypeRequest;
+import com.example.leaveApp.reqres.admin.update.NewLeaveTypeResponse;
 import com.example.leaveApp.service.AuthService;
 import com.example.leaveApp.service.admin.create.CreateLeaveService;
 import com.example.leaveApp.service.admin.update.ResetPasswordService;
+import com.example.leaveApp.service.admin.update.UpdateLeaveTypeService;
 import com.example.leaveApp.service.admin.view.AdminViewService;
 import com.example.leaveApp.service.admin.update.UpdateStatusService;
 import com.example.leaveApp.service.admin.create.CreateEmployeeService;
@@ -37,6 +40,8 @@ public class AdminController {
     ResetPasswordService      resetPasswordService;
     @Autowired
     CreateLeaveService createLeaveService;
+    @Autowired
+    UpdateLeaveTypeService updateLeaveTypeService;
     @Autowired
     AuthService authService;
     @Autowired
@@ -111,6 +116,13 @@ public class AdminController {
         Employee user = authService.getUser(token);
         resetPasswordRequest.setUser(user);
         return resetPasswordService.resetPassword(resetPasswordRequest);
+    }
+    @PostMapping(path = "/admin/leaveType/add")
+    public NewLeaveTypeResponse addLeaveType(@RequestBody NewLeaveTypeRequest request){
+        String token = request.getToken();
+        Employee user = authService.getUser(token);
+        request.setUser(user);
+        return updateLeaveTypeService.addNewLeaveType(request);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
