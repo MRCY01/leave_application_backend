@@ -1,14 +1,13 @@
 package com.example.leaveApp.service.manager;
 
-import com.example.leaveApp.entity.Application;
-import com.example.leaveApp.entity.Leave;
-import com.example.leaveApp.entity.LeaveBalance;
-import com.example.leaveApp.entity.LeaveType;
+import com.example.leaveApp.entity.*;
+import com.example.leaveApp.exception.ServiceException;
 import com.example.leaveApp.repo.ApplicationRepository;
 import com.example.leaveApp.repo.LeaveBalanceRepository;
 import com.example.leaveApp.repo.LeaveRepository;
 import com.example.leaveApp.reqres.manager.ApproveLeaveRequest;
 import com.example.leaveApp.reqres.manager.ApproveLeaveResponse;
+import com.example.leaveApp.service.AuthService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +23,25 @@ public class ApproveLeaveService {
     LeaveRepository leaveRepository;
     @Autowired
     LeaveBalanceRepository leaveBalanceRepository;
+    @Autowired
+    AuthService authService;
     @SneakyThrows
-    public ApproveLeaveResponse approveLeave(ApproveLeaveRequest approveLeaveRequest){
+    public ApproveLeaveResponse approveLeave(ApproveLeaveRequest request){
         ApproveLeaveResponse response = new ApproveLeaveResponse();
 
         try{
-            String      appId = approveLeaveRequest.getAppId();
+            Employee user = request.getUser();
+            if (!(authService.hasRole(user, "ADMIN") && authService.hasRole(user, "MANAGER"))) {
+                throw new ServiceException("User is not permitted to access" );
+            }
+            String      appId = request.getAppId();
             Application application = applicationRepository.findById(Long.parseLong(appId))
                     .orElseThrow(()-> new EntityNotFoundException());
-            application.setManagerApprove(approveLeaveRequest.isApprove());
+            application.setManagerApprove(request.isApprove());
             application.setStatus("manager approved");
             applicationRepository.save(application);
 
-            updateLeaveBalance(approveLeaveRequest.getAppId());
+            updateLeaveBalance(request.getAppId());
 
         }catch (Exception e){
             System.out.println(e);
