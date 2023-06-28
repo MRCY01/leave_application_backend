@@ -31,7 +31,7 @@ public class ManagerShowAllService {
     @SneakyThrows
     public ShowEmployeeApplicationResponse showEmployeeApplication (ShowEmployeeApplicationRequest request){
         Employee user = request.getUser();
-        if (!(authService.hasRole(user, "ADMIN") && authService.hasRole(user, "MANAGER"))) {
+        if (!(authService.hasRole(user, "ADMIN") || authService.hasRole(user, "MANAGER"))) {
             throw new ServiceException("User is not permitted to access" );
         }
 

@@ -31,7 +31,7 @@ public class ApproveLeaveService {
 
         try{
             Employee user = request.getUser();
-            if (!(authService.hasRole(user, "ADMIN") && authService.hasRole(user, "MANAGER"))) {
+            if (!(authService.hasRole(user, "ADMIN") || authService.hasRole(user, "MANAGER"))) {
                 throw new ServiceException("User is not permitted to access" );
             }
             String      appId = request.getAppId();
